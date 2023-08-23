@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  master:
+    image: citusdata/citus:latest
+    environment:
+      POSTGRES_USER: citus
+      POSTGRES_PASSWORD: citus
+    ports:
+      - "5432:5432"
+    command: ["postgres", "-c", "shared_preload_libraries=citus"]
+
+  worker1:
+    image: citusdata/citus:latest
+    environment:
+      POSTGRES_USER: citus
+      POSTGRES_PASSWORD: citus
+    depends_on:
+      - master
+    command: ["postgres", "-c", "shared_preload_libraries=citus"]
+
+  worker2:
+    image: citusdata/citus:latest
+    environment:
+      POSTGRES_USER: citus
+      POSTGRES_PASSWORD: citus
+    depends_on:
+      - master
+    command: ["postgres", "-c", "shared_preload_libraries=citus"]
