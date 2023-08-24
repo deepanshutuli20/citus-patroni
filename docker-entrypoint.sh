@@ -2,10 +2,13 @@
 set -e
 
 # The main entry point for Citus
-/docker-entrypoint-1.sh postgres &
+/usr/local/bin/docker-entrypoint.sh postgres &
 
-# Allow the database to start up
-sleep 10
+# Wait until PostgreSQL is ready
+until pg_isready -U postgres; do
+    echo "Waiting for PostgreSQL to start..."
+    sleep 1
+done
 
 # Check if we're the coordinator
 if [ "$NODE_TYPE" = "coordinator" ]; then
