@@ -1,29 +1,29 @@
 version: '3'
 
 services:
-  master:
-    image: citusdata/citus:latest
+  coordinator:
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: citus
-      POSTGRES_PASSWORD: citus
+      - NODE_TYPE=coordinator
     ports:
       - "5432:5432"
-    command: ["postgres", "-c", "shared_preload_libraries=citus"]
 
   worker1:
-    image: citusdata/citus:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: citus
-      POSTGRES_PASSWORD: citus
-    depends_on:
-      - master
-    command: ["postgres", "-c", "shared_preload_libraries=citus"]
+      - NODE_TYPE=worker
+    ports:
+      - "5433:5432"  # Map host port 5433 to container port 5432 for worker1
 
   worker2:
-    image: citusdata/citus:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: citus
-      POSTGRES_PASSWORD: citus
-    depends_on:
-      - master
-    command: ["postgres", "-c", "shared_preload_libraries=citus"]
+      - NODE_TYPE=worker
+    ports:
+      - "5434:5432"  # Map host port 5434 to container port 5432 for worker2
